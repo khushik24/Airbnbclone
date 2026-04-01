@@ -9,12 +9,9 @@ const listingSchema=new Schema({
    },
    description:String,
    image:{
-      filename:String,
-      url:{
-      type:String,
-      default:"https://images.unsplash.com/photo-1501785888041-af3ef285b470",
-      set:(v)=> v===""?"https://images.unsplash.com/photo-1501785888041-af3ef285b470":v,
-   }},
+     url : String,
+     filename: String,
+   },
    price: {
     type: Number,
     required: true, 
@@ -27,7 +24,13 @@ const listingSchema=new Schema({
          type: Schema.Types.ObjectId,
          ref:"Review",
       }
-   ]
+   ],
+   owner: {
+   type: Schema.Types.ObjectId,
+   ref: "User", // 👈 this tells Mongoose to link to the User model
+   required: true
+}
+
 });
 
 listingSchema.post("findOneAndDelete", async (listing)=>{

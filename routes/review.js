@@ -4,28 +4,14 @@ const wrapAsync = require("../utils/wrapAsync.js");
 const ExpressError = require("../utils/ExpressError.js");
 const Review = require("../models/reviews.js");
 const Listing = require("../models/listing.js");
+const { isLoggedIn, isReviewAuthor } = require("../middleware.js");
+
+const reviewController = require("../controllers/review.js")
 
 // CREATE Review
-router.post("/", wrapAsync(async (req, res) => {
-    const { id } = req.params;
-    const listing = await Listing.findById(id);
-    if (!listing) throw new ExpressError(404, "Listing not found!");
-
-    const newReview = new Review(req.body.review);
-    listing.reviews.push(newReview);
-
-    await newReview.save();
-    await listing.save();
-
-    console.log(" New review saved");
-    res.redirect(`/listings/${listing._id}`);
-}));
+router.post("/", isLoggedIn, wrapAsync(reviewController.createReview ))
 
 // DELETE Review
-router.delete("/:reviewId", wrapAsync(async (req, res) => {
-    const { id, reviewId } = req.params;
-    await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
-    res.redirect(`/listings/${id}`);
-}));
+router.delete("/:reviewId", isLoggedIn, isReviewAuthor, wrapAsync(reviewController.deleteReview));
 
 module.exports = router;
