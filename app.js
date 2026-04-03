@@ -2,6 +2,8 @@ if(process.env.NODE_ENV != "production"){
     require('dotenv').config();
 };
 
+const port = process.env.PORT || 8080;
+
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -21,7 +23,7 @@ const listings = require("./routes/listing.js");
 const reviews = require("./routes/review.js");
 const users = require("./routes/user.js");
 
-const mongo_url = "mongodb://127.0.0.1:27017/wanderlust";
+const mongo_url  = process.env.DB_URL;
 
 // Database
 async function main() {
@@ -41,7 +43,7 @@ app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
 const sessionOptions = {
-    secret: "mysupersecretcode",
+    secret: process.env.SESSION_SECRET || "mysupersecretcode",
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -70,21 +72,6 @@ app.use((req, res, next) => {
     next();
 });
 
-// Test route
-// app.get("/demouser", async (req, res) => {
-//     let fakeUser = new User({
-//         email: "abcd@gmail.com",
-//         username: "abcd",
-//     });
-//     let registeredUser = await User.register(fakeUser, "helloworld");
-//     res.send(registeredUser);
-// });
-
-// Home
-// app.get("/", (req, res) => {
-//     res.send("Hi, I am root!");
-// });
-
 //  Mount Routers
 app.use("/listings", listings);
 app.use("/listings/:id/reviews", reviews);
@@ -108,7 +95,6 @@ app.use((err, req, res, next) => {
 });
 
 
-// Start Server
-app.listen(8080, () => {
-    console.log("Server running on port 8080");
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
 });
