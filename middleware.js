@@ -2,7 +2,7 @@ const Listing = require("./models/listing");
 const Review = require("./models/reviews");
 const ExpressError = require("./utils/ExpressError");
 
-// ✅ Middleware: Check if user is logged in
+
 module.exports.isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
         req.session.returnTo = req.originalUrl; // Save last page user tried to access

@@ -1,18 +1,17 @@
 const Listing = require("../models/listing");
 const { cloudinary } = require("../cloudConfig/cloudinary");
 
-// ✅ Index page
 module.exports.index = async (req, res) => {
   const allListings = await Listing.find({});
   res.render("listings/index.ejs", { allListings });
 };
 
-// ✅ Render new form
+
 module.exports.renderNewForm = (req, res) => {
   res.render("listings/new.ejs");
 };
 
-// ✅ Show a specific listing
+
 module.exports.showListing = async (req, res) => {
   let { id } = req.params;
   const listing = await Listing.findById(id)
@@ -51,7 +50,6 @@ module.exports.createListing = async (req, res, next) => {
 };
 
 
-// ✅ Render edit form
 module.exports.renderEditForm = async (req, res) => {
   let { id } = req.params;
   const listing = await Listing.findById(id);
@@ -64,7 +62,6 @@ module.exports.renderEditForm = async (req, res) => {
    res.render("listings/edit.ejs", { listing, originalImageUrl })
 };
 
-// ✅ Update listing
 module.exports.updateListing = async (req, res) => {
     try {
     const { id } = req.params;
@@ -87,11 +84,19 @@ module.exports.updateListing = async (req, res) => {
     res.redirect("/listings");
   }};
 
-// ✅ Delete listing
+
 module.exports.destroyListings = async (req, res) => {
   let { id } = req.params;
   let deletedListing = await Listing.findByIdAndDelete(id);
   req.flash("success", "Listing Deleted!");
   console.log(deletedListing);
   res.redirect("/listings");
+};
+
+module.exports.index = async (req, res) => {
+    const allListings = await Listing.find({});
+
+    console.log("NUMBER OF LISTINGS:", allListings.length);
+
+    res.render("listings/index.ejs", { allListings });
 };

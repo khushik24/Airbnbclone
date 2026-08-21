@@ -39,6 +39,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -79,6 +80,11 @@ app.use("/", users);
 
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
+
+
 
 // 404 handler
 app.use((req, res, next) => {
@@ -88,13 +94,10 @@ app.use((req, res, next) => {
 
 // Error Handler
 app.use((err, req, res, next) => {
-    console.error("🔥 Error caught by middleware:");
+    console.error(" Error caught by middleware:");
     console.error(err.stack || err);
     const { statusCode = 500, message = "Something went wrong" } = err;
     res.status(statusCode).render("error.ejs", { message });
 });
 
 
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-});
