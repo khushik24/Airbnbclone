@@ -78,6 +78,10 @@ app.use("/listings", listings);
 app.use("/listings/:id/reviews", reviews);
 app.use("/", users);
 
+app.get("/", (req, res) => {
+    res.redirect("/listings");
+});
+
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 
 app.listen(port, () => {
